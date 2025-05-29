@@ -1,0 +1,29 @@
+image: Visual Studio 2022
+
+environment:
+  nodejs_version: "18"
+
+branches:
+  only:
+    - master
+    - main
+
+# cache: node_modules  # временно отключено для избежания кэша
+
+build: off
+
+install:
+  - npm install
+
+before_build:
+  - npm cache clean --force
+  - ps: Remove-Item -Recurse -Force node_modules
+  - ps: Remove-Item -Force package-lock.json
+  - npm install
+  - npx update-browserslist-db@latest --update-db
+
+build_script:
+  - npm run build
+
+test_script:
+  - npm run lint && npm test
