@@ -41,6 +41,13 @@ describe('GameSavingLoader', () => {
     expect(json).toHaveBeenCalledWith(unitBuffer);
   });
 
+  test('должен выбрасывать ошибку при пустой JSON-строке', async () => {
+    read.mockResolvedValue(unitBuffer);
+    json.mockResolvedValue('');
+
+    await expect(GameSavingLoader.load()).rejects.toThrow('Получена пустая строка вместо JSON');
+  });
+
   test('должен выбрасывать ошибку при сбое в read()', async () => {
     read.mockRejectedValue(new Error('Ошибка чтения'));
 
